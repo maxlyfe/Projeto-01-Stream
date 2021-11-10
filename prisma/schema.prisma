@@ -1,0 +1,37 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+//criamos nosso schema 'modelo' para criar nossa tabela. escolhemos que o username seja nosso id para que não possa ser repetido.
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique //unique faz que o campo não possa ser repetido.
+  role      String   @default("USER") // definimos que todos os usuarios são user por defaul, depois pode ser ADM.
+  status    Boolean  @default(true) // definimos que por padrão (default) é true.
+  password  String
+  updatedAt DateTime @updatedAt // gruarda o tempo quando for atualizado por ultima vez.
+  createdAt DateTime @default(now()) // cria por defaul a hora criada (now() *agora*).
+  movies    Movie[]
+
+}
+
+model Movie {
+  id        String   @id @default(uuid())
+  name      String
+  year      String
+  length    String
+  storyLine String
+  image     String
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+  users     User[]
+}
